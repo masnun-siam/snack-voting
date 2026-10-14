@@ -1,10 +1,19 @@
 import { env } from 'cloudflare:workers';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { getDayState, getSettings } from '../../functions/_lib/day';
 
 const db = env.DB;
 const run = (sql: string, ...binds: unknown[]) => db.prepare(sql).bind(...binds).run();
 const at = (iso: string) => new Date(iso);
+
+// Storage is shared across tests in a file, so reset the tables these tests touch.
+beforeEach(async () => {
+  await db.batch([
+    db.prepare('DELETE FROM results'),
+    db.prepare('DELETE FROM snacks'),
+    db.prepare(`UPDATE settings SET open_time = '09:00', cutoff_time = '14:00', working_days = '1,2,3,4,5'`),
+  ]);
+});
 
 // 2026-10-15 is a Thursday; Dhaka is UTC+6. 09:00 open, 14:00 cutoff by default.
 const OPEN = at('2026-10-15T05:00:00Z'); // 11:00 Dhaka
@@ -27,7 +36,7 @@ describe('getDayState with a results row', () => {
   });
 
   it('reports decided and includes the stored result', async () => {
-    await run(`INSERT INTO snacks (name) VALUES ('Samosa')`);
+    await run(`INSERT INTO snacks (id, name) VALUES (1, 'Samosa')`);
     await run(
       `INSERT INTO results (day, status, winner_snack_id, method, counts) VALUES ('2026-10-15', 'decided', 1, 'votes', '{"1":3}')`,
     );
