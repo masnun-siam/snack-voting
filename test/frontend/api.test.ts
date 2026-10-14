@@ -8,12 +8,29 @@ const load = async () => ({
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 
+// Node 26 ships a native `localStorage` getter that returns undefined without --localstorage-file and
+// shadows jsdom's, so install explicit in-memory storages instead of relying on the environment.
+const memStorage = () => {
+  const m = new Map<string, string>();
+  return {
+    getItem: (k: string) => (m.has(k) ? m.get(k)! : null),
+    setItem: (k: string, v: unknown) => void m.set(k, String(v)),
+    removeItem: (k: string) => void m.delete(k),
+    clear: () => m.clear(),
+    dump: () => [...m.entries()],
+  };
+};
+let local: ReturnType<typeof memStorage>;
+let session: ReturnType<typeof memStorage>;
+
 let fetchMock: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
   vi.resetModules();
-  localStorage.clear();
-  sessionStorage.clear();
+  local = memStorage();
+  session = memStorage();
+  vi.stubGlobal('localStorage', local);
+  vi.stubGlobal('sessionStorage', session);
   fetchMock = vi.fn(async () => json({ ok: true }));
   vi.stubGlobal('fetch', fetchMock);
 });
@@ -141,12 +158,12 @@ describe('identity', () => {
     const { identity } = await load();
     identity.setPin('s3cret');
     expect(identity.getPin()).toBe('s3cret');
-    expect(Object.values(sessionStorage)).toContain('s3cret');
-    expect(JSON.stringify(Object.entries(localStorage))).not.toContain('s3cret');
+    expect(JSON.stringify(session.dump())).toContain('s3cret');
+    expect(JSON.stringify(local.dump())).not.toContain('s3cret');
     identity.setEmployee(1);
-    expect(JSON.stringify(Object.entries(localStorage))).not.toContain('s3cret');
+    expect(JSON.stringify(local.dump())).not.toContain('s3cret');
     identity.clearPin();
     expect(identity.getPin()).toBeNull();
-    expect(Object.keys(sessionStorage)).toHaveLength(0);
+    expect(session.dump()).toHaveLength(0);
   });
 });
