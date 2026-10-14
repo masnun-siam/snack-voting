@@ -55,7 +55,7 @@ export function mount(target, context) {
   render();
 }
 
+// Doesn't re-render: the form never reads state, and rebuilding it on every poll would wipe a half-typed name.
 export function update(state) {
   ctx = { ...ctx, state };
-  render();
 }
