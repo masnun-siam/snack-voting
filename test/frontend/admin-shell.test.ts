@@ -87,8 +87,8 @@ describe('admin shell', () => {
   it('a stored PIN that validates keeps access across a re-boot without prompting', async () => {
     session.setItem('snack.adminPin', 'right');
     await boot();
-    // The PIN is validated once; mounted sections (e.g. employees) may then load their own data.
-    expect(fetchMock.mock.calls.filter(([url]) => url === '/api/admin/settings')).toHaveLength(1);
+    // The PIN is validated by the first settings call; the settings section then loads its own data from the same endpoint.
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/admin/settings');
     expect(prompt().hidden).toBe(true);
     expect(sections().hidden).toBe(false);
   });
