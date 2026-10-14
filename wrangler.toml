@@ -1,0 +1,13 @@
+name = "snack-voting"
+pages_build_output_dir = "public"
+compatibility_date = "2026-08-22"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "snack-voting"
+# Placeholder: local/test only. Replace with the real id from `wrangler d1 create`.
+database_id = "00000000-0000-0000-0000-000000000000"
+
+# ADMIN_PIN is a secret. Set it outside the repo with
+#   wrangler pages secret put ADMIN_PIN
+# (local dev: put it in the git-ignored .dev.vars). Never commit its value.
