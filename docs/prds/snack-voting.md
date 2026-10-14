@@ -1,6 +1,6 @@
 # PRD — Snack Voting
 
-**Status:** Draft · **Date:** 2026-10-15 · **Slug:** `snack-voting` · **Owner:** masnun-siam · **Priority:** medium · **Repo:** none yet (greenfield)
+**Status:** Approved · **Date:** 2026-10-15 · **Slug:** `snack-voting` · **Owner:** masnun-siam · **Priority:** medium · **Repo:** none yet (greenfield)
 
 This document is the source of truth for the feature: the task list and every issue are derived from it, and a decision that is not written here has not been made.
 
@@ -105,7 +105,7 @@ All under `/api`, JSON. Voter endpoints are open; admin endpoints need header `X
 - `POST /vote` `{employee_id, snack_id}` — 403 closed, 404 unknown or inactive, 409 snack not votable.
 - `POST /suggestions` `{employee_id, name}` — 409 duplicate, 429 over 3 pending.
 - `GET /history` — last 30 decided days.
-- Admin: `GET /admin/suggestions`, `POST /admin/snacks` (add), `PATCH /admin/snacks/:id` (rename, approve, reject, retire), `POST /admin/employees` (bulk `{names[]}` or one), `PATCH /admin/employees/:id`, `PUT /admin/settings`, `POST /admin/days/:day/skip`, `POST /admin/days/:day/override` `{snack_id}`. Wrong or missing PIN gives 401; PIN compare is constant-time.
+- Admin: `GET /admin/suggestions`, `GET /admin/snacks` (all snacks, any status, with suggester), `POST /admin/snacks` (add), `PATCH /admin/snacks/:id` (rename, approve, reject, retire), `GET /admin/employees` (all, including inactive), `POST /admin/employees` (bulk `{names[]}` or one), `PATCH /admin/employees/:id`, `GET /admin/settings`, `PUT /admin/settings`, `POST /admin/days/:day/skip`, `POST /admin/days/:day/override` `{snack_id}`. Wrong or missing PIN gives 401; PIN compare is constant-time.
 
 ### Backend
 Cloudflare Pages Functions only; no cron and no Worker outside Pages. The day is decided lazily by the first `GET /state` after cutoff using an insert-if-absent on `results`, so concurrent callers converge on one row. The random tie pick happens inside that insert, so it is stored before anyone sees it.
@@ -137,7 +137,7 @@ At least 70% of employees vote on a typical working day within 2 weeks of launch
 
 ## Epics
 
-- **E1 Snack Voting site** — covers FR-1 to FR-12. Issue: —
+- **E1 Snack Voting site** — covers FR-1 to FR-12. Issue: #1
 
 ## Decisions
 
@@ -153,6 +153,8 @@ At least 70% of employees vote on a typical working day within 2 weeks of launch
 - Employees and snacks are deactivated or retired, never deleted — keeps history intact.
 - Priority medium, success measured by 70% participation — internal nice-to-have.
 - The admin places the order outside the app — ordering is not in scope.
+- Rejecting a suggestion sets its status to retired — the snack status set has no other terminal value and snacks are never deleted (raised by /create-tasks).
+- The admin screens read full lists through `GET /admin/snacks`, `GET /admin/employees` and `GET /admin/settings`, since the voter endpoints show only active or approved data — the admin UI cannot manage what it cannot list (raised by /create-tasks).
 
 ## Open questions
 
@@ -160,7 +162,7 @@ None
 
 ## Change log
 
-None
+- 2026-10-15 — reject = retire; added admin read endpoints GET /admin/snacks, /admin/employees, /admin/settings; issues affected: none (no task issues yet)
 
 ## Related
 
