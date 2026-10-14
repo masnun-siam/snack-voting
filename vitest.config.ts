@@ -10,6 +10,7 @@ export default defineConfig({
         test: {
           name: 'backend',
           include: ['test/backend/**/*.test.ts'],
+          setupFiles: ['test/backend/setup.ts'],
           passWithNoTests: true,
         },
       },
