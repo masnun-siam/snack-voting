@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Snack voting admin</title>
+<style>
+  body { font: 16px/1.4 system-ui, sans-serif; margin: 0 auto; max-width: 40rem; padding: 1rem; }
+  [hidden] { display: none; }
+  section { margin: 1.5rem 0; }
+  input, button { font: inherit; padding: .5rem; }
+  [role="alert"] { color: #b00020; }
+</style>
+</head>
+<body>
+<h1>Admin</h1>
+<div id="pin-prompt" hidden></div>
+<div id="admin-sections" hidden>
+  <section id="menu"></section>
+  <section id="employees"></section>
+  <section id="controls"></section>
+</div>
+<script type="module" src="/js/admin/main.js"></script>
+</body>
+</html>

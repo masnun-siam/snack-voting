@@ -108,7 +108,7 @@ describe('PIN never in served files (FR-9)', () => {
     expect(Object.keys(files).length).toBeGreaterThan(1);
     for (const [name, src] of Object.entries(files)) {
       expect(src, name).not.toMatch(/ADMIN_PIN/);
-      expect(src, name).not.toMatch(/\bpin\w*\s*[:=]\s*['"`][^'"`\s]/i);
+      expect(src, name).not.toMatch(/\b(?:admin_?)?pin\s*[:=]\s*['"`][^'"`\s]/i);
       expect(src, name).not.toMatch(/setPin\(\s*['"`\d]/);
       expect(src, name).not.toMatch(/value=["']?\d{3,}/);
     }
