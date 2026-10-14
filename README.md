@@ -8,18 +8,18 @@ Built (on `main`):
 - Vote, suggest and history view modules (`public/js/views/`).
 - Admin page (`public/admin.html`) with PIN prompt, menu, employees and day controls sections (`public/js/admin/`).
 - Shared API client, identity helper, and Pages Functions helpers for env and JSON responses (`public/js/`, `functions/_lib/`).
+- GitHub Actions workflow (`.github/workflows/deploy.yml`): runs the tests on pushes and pull requests, and on `main` applies D1 migrations and deploys to Cloudflare Pages.
 
 Planned:
 - Voter home page (`public/index.html`) wiring the views together.
 - The `/api` Pages Functions endpoints (voter and admin).
 - The D1 schema and migrations.
 - Automatic daily decision at cutoff, with tie-break and admin override.
-- Deploy workflow to Cloudflare Pages.
 
 ## Documentation
 
 - [Quickstart](docs/quickstart.md): clone to a running local site and passing tests.
-- [Deploy guide](docs/deploy.md): publish to Cloudflare Pages.
+- Deploy guide: planned (not yet written).
 - [Architecture](docs/architecture.md): data model, API contract, day lifecycle.
 - [Contributing](CONTRIBUTING.md): how to propose and make changes.
 - [License](LICENSE): MIT.
