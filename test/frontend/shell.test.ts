@@ -119,8 +119,8 @@ describe('views', () => {
   it('mounts vote, suggest and history once an employee is chosen', async () => {
     local.setItem('snack.employee', 1);
     await boot();
-    await vi.waitFor(() => expect($('vote').textContent).toMatch(/placeholder/));
-    expect($('suggest').textContent).toMatch(/placeholder/);
+    await vi.waitFor(() => expect($('vote').textContent).toMatch(/voting is open/i));
+    expect($('suggest').querySelector('button')?.textContent).toBe('Suggest');
     await vi.waitFor(() => expect($('history').textContent).toMatch(/no decided days/i));
   });
 });
