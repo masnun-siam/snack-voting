@@ -45,3 +45,9 @@ export function dayWindowStatus(settings: WindowSettings, now: Date): WindowStat
   if (minutes < toMinutes(settings.cutoff_time)!) return 'open';
   return 'after_cutoff';
 }
+
+/** True for a real calendar date written as YYYY-MM-DD. */
+export function isValidDay(day: string): boolean {
+  const t = new Date(`${day}T00:00:00Z`).getTime();
+  return /^\d{4}-\d{2}-\d{2}$/.test(day) && !Number.isNaN(t) && new Date(t).toISOString().startsWith(day);
+}
