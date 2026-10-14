@@ -6,7 +6,7 @@ const at = (iso: string) => new Date(iso);
 
 describe('dhakaDay', () => {
   it('returns the Dhaka date, not the UTC date', () => {
-    expect(dhakaDay(at('2026-10-15T18:59:00Z'))).toBe('2026-10-15');
+    expect(dhakaDay(at('2026-10-15T17:59:00Z'))).toBe('2026-10-15');
     expect(dhakaDay(at('2026-10-15T19:00:00Z'))).toBe('2026-10-16');
   });
 });
