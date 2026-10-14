@@ -14,7 +14,6 @@ describe.each(Object.entries(views))('%s view stub', (_name, load) => {
     expect(() => mount(el, ctx)).not.toThrow();
     expect(el.innerHTML).not.toBe('');
 
-    el.innerHTML = '';
     expect(() => update({ round: 2 })).not.toThrow();
     expect(el.innerHTML).not.toBe('');
   });

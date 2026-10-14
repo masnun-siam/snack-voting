@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '../../public/js/views/suggest.js';
+import { mount, update } from '../../public/js/views/suggest.js';
 
 const flush = () => new Promise((r) => setTimeout(r, 0));
 
@@ -22,6 +22,13 @@ beforeEach(() => {
 });
 
 describe('suggest view', () => {
+  it('keeps a half-typed name when a state poll calls update', () => {
+    setup(vi.fn());
+    (el.querySelector('input') as HTMLInputElement).value = 'Chi';
+    update({ status: 'open' });
+    expect((el.querySelector('input') as HTMLInputElement).value).toBe('Chi');
+  });
+
   it('renders a text input with maxlength 60 when an employee is set', () => {
     setup(vi.fn());
     expect(el.querySelector('input')?.getAttribute('maxlength')).toBe('60');
