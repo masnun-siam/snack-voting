@@ -87,7 +87,8 @@ describe('admin shell', () => {
   it('a stored PIN that validates keeps access across a re-boot without prompting', async () => {
     session.setItem('snack.adminPin', 'right');
     await boot();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    // One validation call; the mounted menu section then loads its own lists (#27).
+    expect(fetchMock.mock.calls.filter(([u]) => u === '/api/admin/settings')).toHaveLength(1);
     expect(prompt().hidden).toBe(true);
     expect(sections().hidden).toBe(false);
   });
