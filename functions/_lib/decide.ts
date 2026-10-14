@@ -17,7 +17,8 @@ export async function decideDay(db: D1Database, day: string): Promise<ResultRow>
          CASE WHEN NOT EXISTS (SELECT 1 FROM top) THEN 'no_votes'
               WHEN (SELECT tied FROM top) > 1 THEN 'tie_random'
               ELSE 'votes' END,
-         COALESCE((SELECT json_group_array(json_object('snack_id', snack_id, 'name', name, 'count', count)) FROM c), '[]')
+         -- {name: count}, the shape GET /history serves (FR-12); names are unique so keys don't collide.
+         COALESCE((SELECT json_group_object(name, count) FROM c), '{}')
        WHERE true
        ON CONFLICT (day) DO NOTHING`,
     )

@@ -48,10 +48,7 @@ describe('decideDay', () => {
     await vote(3, 1);
     const r = await decideDay(db, DAY);
     expect(r).toMatchObject({ day: DAY, status: 'decided', winner_snack_id: 2, method: 'votes' });
-    expect(byId(JSON.parse(r.counts))).toEqual([
-      { snack_id: 1, name: 'Samosa', count: 1 },
-      { snack_id: 2, name: 'Singara', count: 2 },
-    ]);
+    expect(JSON.parse(r.counts)).toEqual({ Samosa: 1, Singara: 2 });
   });
 
   it('breaks a 2-way tie at random among the tied snacks', async () => {
@@ -77,7 +74,7 @@ describe('decideDay', () => {
   it('records no_votes with a null winner and empty counts when nobody voted', async () => {
     const r = await decideDay(db, DAY);
     expect(r).toMatchObject({ status: 'decided', winner_snack_id: null, method: 'no_votes' });
-    expect(JSON.parse(r.counts)).toEqual([]);
+    expect(JSON.parse(r.counts)).toEqual({});
   });
 
   it('counts a deactivated employee vote', async () => {

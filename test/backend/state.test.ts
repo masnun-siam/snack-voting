@@ -84,12 +84,7 @@ describe('GET /api/state after cutoff', () => {
     const first = await get(AFTER);
     expect(first.body.status).toBe('decided');
     expect(first.body.result).toMatchObject({ winner: { id: 1, name: 'Samosa' }, method: 'votes' });
-    expect(first.body.result.counts).toEqual(
-      expect.arrayContaining([
-        { snack_id: 1, name: 'Samosa', count: 2 },
-        { snack_id: 2, name: 'Singara', count: 1 },
-      ]),
-    );
+    expect(first.body.result.counts).toEqual({ Samosa: 2, Singara: 1 });
     expect((await db.prepare('SELECT * FROM results').all()).results).toHaveLength(1);
     await run('UPDATE votes SET snack_id = 2 WHERE employee_id = 1'); // a late change must not alter the result
     expect((await get(AFTER)).body.result).toEqual(first.body.result);
@@ -107,7 +102,7 @@ describe('GET /api/state after cutoff', () => {
   it('reports no_votes with a null winner', async () => {
     const { body } = await get(AFTER);
     expect(body.status).toBe('decided');
-    expect(body.result).toMatchObject({ winner: null, method: 'no_votes', counts: [] });
+    expect(body.result).toMatchObject({ winner: null, method: 'no_votes', counts: {} });
   });
 
   it('decides nothing on a non-working day', async () => {
