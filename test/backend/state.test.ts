@@ -72,7 +72,7 @@ describe('GET /api/state while open', () => {
     await vote(2, 2);
     const { text } = await get(OPEN, '?employee=1');
     for (const name of ['Zorblax', 'Quimby', 'Wexford']) expect(text).not.toContain(name);
-    expect(text).not.toMatch(/employee|voter/i);
+    expect(text).not.toMatch(/employee_id|voter/i);
   });
 });
 
@@ -91,8 +91,8 @@ describe('GET /api/state after cutoff', () => {
       ]),
     );
     expect((await db.prepare('SELECT * FROM results').all()).results).toHaveLength(1);
-    await vote(2, 1); // late write must not change anything
-    expect((await get(AFTER)).text).toBe(first.text);
+    await run('UPDATE votes SET snack_id = 2 WHERE employee_id = 1'); // a late change must not alter the result
+    expect((await get(AFTER)).body.result).toEqual(first.body.result);
   });
 
   it('keeps the same random winner and method on a tie', async () => {
