@@ -39,6 +39,10 @@ npm test
 
 This runs `vitest run`. It should finish with all tests passing.
 
-## Local database (Planned)
+## Local database
 
-Planned: applying local D1 migrations. There is no `migrations/` directory yet; the schema arrives in issue #3. Once it merges, this section will list the exact Wrangler command to apply the migrations to the local `snack-voting` database (binding `DB`).
+Apply the D1 migrations to the local `snack-voting` database (binding `DB`) before the first `npm run dev`:
+
+```bash
+npx wrangler d1 migrations apply snack-voting --local
+```
