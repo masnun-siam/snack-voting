@@ -1,7 +1,8 @@
 # Snack Voting — task list
 
 - Source PRD: `docs/prds/snack-voting.md` (status `Approved`; every decision lives there, none here)
-- Epic: #1
+- Epic: #1 (E1 Snack Voting site)
+- Epic: #58 (E2 Repo docs and deploy)
 - Date: 2026-10-15
 - Repo: masnun-siam/snack-voting
 
@@ -11,14 +12,15 @@ Greenfield repo (no `CLAUDE.md`, no code): every file below is `(new)` unless st
 
 - `functions/_lib/*.ts` — each created by one task (3: `time.ts`, 4: `env.ts`/`http.ts`, 5: `auth.ts`, 7: `day.ts`, 9: `counts.ts`/`decide.ts`) and only imported afterwards; no later task edits them.
 - `public/js/views/{vote,suggest,history}.js` — stubs owned by task 19, then replaced by exactly one of tasks 21, 22, 23; `public/js/admin/{menu,employees,controls}.js` — stubs owned by task 24, replaced by tasks 26, 27, 28. The dependency on the stub task orders them.
+- `README.md` (existing) — edited only by task 34; the other docs tasks create new files and never touch it. E2 has no file in common with E1: no task here depends on an E1 task, and each doc describes what exists when it merges and marks the rest "Planned".
 - `public/js/api.js`, `public/js/identity.js` — owned by task 18; read-only for the rest.
 
 
 ## Waves
 
-- Wave 1 (can start now): backend task 1
-- Wave 2 (after wave 1 is merged): backend task 2, backend task 3, backend task 4, frontend task 18, frontend task 19, frontend task 24
-- Wave 3 (after wave 2 is merged): backend task 5, backend task 6, backend task 7, backend task 11, backend task 12, backend task 13, backend task 14, backend task 15, backend task 16, frontend task 20, frontend task 25
+- Wave 1 (can start now): backend task 1, ci task 29, docs task 30, docs task 31, docs task 33
+- Wave 2 (after wave 1 is merged): backend task 2, backend task 3, backend task 4, frontend task 18, frontend task 19, frontend task 24, docs task 32
+- Wave 3 (after wave 2 is merged): backend task 5, backend task 6, backend task 7, backend task 11, backend task 12, backend task 13, backend task 14, backend task 15, backend task 16, frontend task 20, frontend task 25, docs task 34
 - Wave 4 (after wave 3 is merged): backend task 8, backend task 9, backend task 17, frontend task 21, frontend task 22, frontend task 23, frontend task 26, frontend task 27, frontend task 28
 - Wave 5 (after wave 4 is merged): backend task 10
 
@@ -33,6 +35,7 @@ Acceptance criteria:
 Verify command: `npm test`
 Depends on: none
 Parallel: yes
+Epic: #1
 Issue: #2
 
 ## Task 2 — Schema and migration
@@ -46,6 +49,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/schema.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #3
 
 ## Task 3 — Time and window logic
@@ -59,6 +63,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/time.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #4
 
 ## Task 4 — Env type and HTTP helpers
@@ -72,6 +77,7 @@ Acceptance criteria:
 Verify command: `npx tsc --noEmit && npx vitest run --project backend test/backend/http.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #5
 
 ## Task 5 — Admin PIN middleware
@@ -85,6 +91,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/auth.test.ts`
 Depends on: task 4
 Parallel: yes
+Epic: #1
 Issue: #6
 
 ## Task 6 — Voter employee list
@@ -98,6 +105,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/employees.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #7
 
 ## Task 7 — Day state helper
@@ -111,6 +119,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/day.test.ts`
 Depends on: task 2, task 3
 Parallel: yes
+Epic: #1
 Issue: #8
 
 ## Task 8 — Cast or change a vote
@@ -124,6 +133,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/vote.test.ts`
 Depends on: task 4, task 7
 Parallel: yes
+Epic: #1
 Issue: #9
 
 ## Task 9 — Decide the day
@@ -137,6 +147,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/decide.test.ts`
 Depends on: task 7
 Parallel: yes
+Epic: #1
 Issue: #10
 
 ## Task 10 — Voter state endpoint
@@ -150,6 +161,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/state.test.ts`
 Depends on: task 4, task 7, task 9
 Parallel: yes
+Epic: #1
 Issue: #11
 
 ## Task 11 — Suggest a snack
@@ -163,6 +175,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/suggestions.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #12
 
 ## Task 12 — History endpoint
@@ -176,6 +189,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/history.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #13
 
 ## Task 13 — Admin snack list and add
@@ -189,6 +203,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-snacks-list.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #14
 
 ## Task 14 — Admin snack update
@@ -202,6 +217,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-snack-update.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #15
 
 ## Task 15 — Admin employees API
@@ -215,6 +231,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-employees.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #16
 
 ## Task 16 — Admin settings API
@@ -228,6 +245,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-settings.test.ts`
 Depends on: task 2, task 3, task 4
 Parallel: yes
+Epic: #1
 Issue: #17
 
 ## Task 17 — Admin day skip and override
@@ -241,6 +259,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-days.test.ts`
 Depends on: task 2, task 3, task 4, task 7
 Parallel: yes
+Epic: #1
 Issue: #18
 
 ## Task 18 — Frontend API client and identity
@@ -254,6 +273,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/api.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #19
 
 ## Task 19 — Voter view contract and stubs
@@ -266,6 +286,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/stubs.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #20
 
 ## Task 20 — Page shell and name picker
@@ -279,6 +300,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/shell.test.ts`
 Depends on: task 18, task 19
 Parallel: yes
+Epic: #1
 Issue: #21
 
 ## Task 21 — Vote view
@@ -292,6 +314,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/vote-view.test.ts`
 Depends on: task 20
 Parallel: yes
+Epic: #1
 Issue: #22
 
 ## Task 22 — Suggest view
@@ -305,6 +328,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/suggest-view.test.ts`
 Depends on: task 20
 Parallel: yes
+Epic: #1
 Issue: #23
 
 ## Task 23 — History view
@@ -318,6 +342,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/history-view.test.ts`
 Depends on: task 20
 Parallel: yes
+Epic: #1
 Issue: #24
 
 ## Task 24 — Admin view contract and stubs
@@ -330,6 +355,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-stubs.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #25
 
 ## Task 25 — Admin shell and PIN prompt
@@ -343,6 +369,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-shell.test.ts`
 Depends on: task 18, task 24
 Parallel: yes
+Epic: #1
 Issue: #26
 
 ## Task 26 — Admin menu view
@@ -356,6 +383,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-menu.test.ts`
 Depends on: task 25
 Parallel: yes
+Epic: #1
 Issue: #27
 
 ## Task 27 — Admin employees view
@@ -369,6 +397,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-employees.test.ts`
 Depends on: task 25
 Parallel: yes
+Epic: #1
 Issue: #28
 
 ## Task 28 — Admin settings and day controls view
@@ -382,4 +411,89 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-controls.test.ts`
 Depends on: task 25
 Parallel: yes
+Epic: #1
 Issue: #29
+
+## Task 29 — Deploy workflow
+Outcome: A GitHub Actions workflow tests every push and pull request and deploys to Cloudflare Pages on pushes to `main` only.
+Area: ci
+Files/symbols: `.github/workflows/deploy.yml` (new): job `test` (checkout, Node, `npm ci`, `npm test`) on `push` to `main` and on `pull_request`; job `deploy` with `needs: test` and `if: github.event_name == 'push' && github.ref == 'refs/heads/main'`, steps `npx wrangler d1 migrations apply snack-voting --remote` then `npx wrangler pages deploy public --project-name snack-voting`, credentials from `secrets.CLOUDFLARE_API_TOKEN` and `secrets.CLOUDFLARE_ACCOUNT_ID`. Precedent: none in repo; the PRD's Deployment design. A text-level test `test/frontend/workflow.test.ts` (new, not counted) reads the file.
+Acceptance criteria:
+- A pull request runs the `test` job only; `deploy` is gated on a push to `main` and `needs: test`, so failing tests stop it (FR-14).
+- Migrations run before the Pages deploy in the same job, so a failing migration step stops the run before any deploy (FR-14).
+- The file refers to credentials only as `${{ secrets.* }}` references; no token, account id or PIN value appears, and `ADMIN_PIN` is not mentioned (FR-14).
+Verify command: `npx vitest run --project frontend test/frontend/workflow.test.ts`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #59
+
+## Task 30 — LICENSE and CONTRIBUTING
+Outcome: The repo has an MIT license and a contributor guide.
+Area: docs
+Files/symbols: `LICENSE` (new: MIT text, "Copyright (c) 2026 Masnun Siam"), `CONTRIBUTING.md` (new: how to set up, run `npm test` and `npx tsc --noEmit`, branch and pull request flow, test-first expectation; anything not built yet marked "Planned").
+Acceptance criteria:
+- `LICENSE` is the standard MIT text with "2026 Masnun Siam" (FR-13).
+- `CONTRIBUTING.md` cites only commands that exist in `package.json` today and marks anything not built "Planned" (FR-13).
+- Neither file contains a secret value (FR-13).
+Verify command: `grep -q "2026 Masnun Siam" LICENSE && grep -q "Permission is hereby granted" LICENSE && grep -q "npm test" CONTRIBUTING.md`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #60
+
+## Task 31 — Quickstart
+Outcome: A fresh clone gets to a running local site and a passing test suite by following one page.
+Area: docs
+Files/symbols: `docs/quickstart.md` (new: prerequisites, `npm install`, `npm run dev`, `npm test`, setting `ADMIN_PIN` in the git-ignored `.dev.vars`, applying local D1 migrations once they exist, marked "Planned" until then).
+Acceptance criteria:
+- Every command in the file exists in `package.json` or is a Wrangler command that works at merge time; steps not yet possible are labelled "Planned" (FR-13).
+- Following it from a fresh clone ends with `npm test` passing (FR-13).
+- The file contains no secret or PIN value (FR-13).
+Verify command: `grep -q "npm test" docs/quickstart.md && npm ci && npm test`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #61
+
+## Task 32 — Deploy guide
+Outcome: A maintainer can set up Cloudflare and the repo secrets from one page and understands what the workflow does.
+Area: docs
+Files/symbols: `docs/deploy.md` (new: create the Pages project `snack-voting` and the D1 database, where to replace the placeholder `database_id` in `wrangler.toml`, `wrangler pages secret put ADMIN_PIN`, repo secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, token minimum scopes Pages edit and D1 edit, a description of `.github/workflows/deploy.yml`).
+Acceptance criteria:
+- Covers the Pages project, the D1 database, replacing the placeholder id, setting `ADMIN_PIN`, the two repo secrets and the token's minimum scopes (Pages edit, D1 edit) (FR-13).
+- Describes the workflow as it exists: tests first, migrations, then deploy on push to `main`, no PR previews (FR-14).
+- Contains no secret value (FR-13).
+Verify command: `grep -q "CLOUDFLARE_API_TOKEN" docs/deploy.md && grep -q "CLOUDFLARE_ACCOUNT_ID" docs/deploy.md && grep -q "ADMIN_PIN" docs/deploy.md && grep -q "D1" docs/deploy.md`
+Depends on: task 29
+Parallel: yes
+Epic: #58
+Issue: #63
+
+## Task 33 — Architecture doc and CLAUDE.md
+Outcome: The design and the repo conventions are written down for maintainers and agents.
+Area: docs
+Files/symbols: `docs/architecture.md` (new: Pages + Functions + D1, data model, API contract, lazy day decision, what is built vs "Planned"), `CLAUDE.md` (new: layout `functions/`, `migrations/`, `public/`, `test/backend`, `test/frontend`, commands `npm test` and `npx tsc --noEmit`, the PRD at `docs/prds/snack-voting.md` as source of truth, no committed secrets).
+Acceptance criteria:
+- `docs/architecture.md` matches the PRD's technical design and labels everything not yet built "Planned" (FR-13).
+- `CLAUDE.md` lists only paths and commands that exist today, or marks them "Planned" (FR-13).
+- Neither file contains a secret value (FR-13).
+Verify command: `test -f docs/architecture.md && test -f CLAUDE.md && grep -q "Planned" docs/architecture.md`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #62
+
+## Task 34 — README
+Outcome: The README introduces the project and links every other doc.
+Area: docs
+Files/symbols: `README.md` (existing: rewrite with what it is, features marked built or "Planned", links to `docs/quickstart.md`, `docs/deploy.md`, `docs/architecture.md`, `CONTRIBUTING.md`, `LICENSE`).
+Acceptance criteria:
+- Links to the quickstart, deploy guide, architecture doc, CONTRIBUTING and LICENSE, each of which exists (FR-13).
+- Describes only what exists today and marks the rest "Planned" (FR-13).
+- Contains no secret value (FR-13).
+Verify command: `for f in docs/quickstart.md docs/deploy.md docs/architecture.md CONTRIBUTING.md LICENSE; do grep -q "$f" README.md && test -f "$f" || exit 1; done`
+Depends on: task 31, task 32, task 33
+Parallel: yes
+Epic: #58
+Issue: #64
