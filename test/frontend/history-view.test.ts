@@ -3,7 +3,7 @@ import { mount, update } from '../../public/js/views/history.js';
 
 type Entry = { day: string; winner: string | null; counts: Record<string, number>; method: string };
 
-const setup = async (getHistory: () => Promise<Entry[]>) => {
+const setup = (getHistory: () => Promise<Entry[]>) => {
   const el = document.createElement('div');
   const api = { getHistory: vi.fn(getHistory) };
   mount(el, { employee: null, state: { status: 'open' }, api, refresh: async () => {} });
@@ -20,7 +20,7 @@ const DAYS: Entry[] = [
 
 describe('history view', () => {
   it('fetches on mount and lists each day with date, winner and counts per snack', async () => {
-    const { el, api } = await setup(async () => DAYS);
+    const { el, api } = setup(async () => DAYS);
     expect(el.textContent).toMatch(/loading/i);
     await vi.waitFor(() => expect(rows(el).length).toBe(2));
     expect(api.getHistory).toHaveBeenCalledTimes(1);
@@ -41,21 +41,21 @@ describe('history view', () => {
     ['skipped', /skipped/i],
   ])('labels method %s', async (method, label) => {
     const winner = method === 'no_votes' || method === 'skipped' ? null : 'Tea';
-    const { el } = await setup(async () => [{ day: '2026-10-12', winner, counts: {}, method }]);
+    const { el } = setup(async () => [{ day: '2026-10-12', winner, counts: {}, method }]);
     await vi.waitFor(() => expect(rows(el).length).toBe(1));
     expect(rows(el)[0].textContent).toMatch(label);
     expect(rows(el)[0].textContent).not.toMatch(/null|undefined/);
   });
 
   it('shows an empty message when there are no decided days', async () => {
-    const { el } = await setup(async () => []);
+    const { el } = setup(async () => []);
     await vi.waitFor(() => expect(el.textContent).toMatch(/no decided days/i));
     expect(rows(el).length).toBe(0);
   });
 
   it('shows an error with Retry that refetches', async () => {
     let fail = true;
-    const { el, api } = await setup(async () => {
+    const { el, api } = setup(async () => {
       if (fail) throw new Error('boom');
       return DAYS;
     });
@@ -72,7 +72,7 @@ describe('history view', () => {
 
   it('escapes winner and snack names', async () => {
     const evil = '<img src=x onerror=alert(1)>';
-    const { el } = await setup(async () => [
+    const { el } = setup(async () => [
       { day: '2026-10-11', winner: evil, counts: { [evil]: 1 }, method: 'votes' },
     ]);
     await vi.waitFor(() => expect(rows(el).length).toBe(1));
@@ -81,7 +81,7 @@ describe('history view', () => {
   });
 
   it('update() does not refetch while the status is unchanged', async () => {
-    const { el, api } = await setup(async () => DAYS);
+    const { el, api } = setup(async () => DAYS);
     await vi.waitFor(() => expect(rows(el).length).toBe(2));
     update({ status: 'open' });
     expect(api.getHistory).toHaveBeenCalledTimes(1);
@@ -89,7 +89,7 @@ describe('history view', () => {
   });
 
   it('update() refetches when the day status changes (e.g. open to decided)', async () => {
-    const { el, api } = await setup(async () => DAYS);
+    const { el, api } = setup(async () => DAYS);
     await vi.waitFor(() => expect(rows(el).length).toBe(2));
     update({ status: 'decided' });
     await vi.waitFor(() => expect(api.getHistory).toHaveBeenCalledTimes(2));

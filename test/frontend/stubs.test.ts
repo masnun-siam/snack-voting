@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 const views = {
   vote: () => import('../../public/js/views/vote.js'),
   suggest: () => import('../../public/js/views/suggest.js'),
-  history: () => import('../../public/js/views/history.js'),
 };
 
 describe.each(Object.entries(views))('%s view stub', (_name, load) => {

@@ -56,6 +56,7 @@ beforeEach(() => {
   vi.stubGlobal('sessionStorage', memStorage());
   fetchMock = vi.fn(async (url: string) => {
     if (fail) throw new TypeError('network down');
+    if (String(url) === '/api/history') return reply([]);
     return reply(String(url).startsWith('/api/state') ? state : employees);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -120,7 +121,7 @@ describe('views', () => {
     await boot();
     await vi.waitFor(() => expect($('vote').textContent).toMatch(/placeholder/));
     expect($('suggest').textContent).toMatch(/placeholder/);
-    expect($('history').textContent).toMatch(/placeholder/);
+    await vi.waitFor(() => expect($('history').textContent).toMatch(/no decided days/i));
   });
 });
 
