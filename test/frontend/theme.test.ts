@@ -5,10 +5,10 @@ const css = readFileSync('public/css/theme.css', 'utf8').replace(/\/\*[\s\S]*?\*
 
 // Flat list of rules (media-query wrappers are skipped by the regex).
 const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => ({
-  selectors: sel.split(',').map((s) => s.trim()),
+  selectors: sel.split(',').map((s: string) => s.trim()),
   body,
 }));
-const hasSelector = (re: RegExp) => rules.some((r) => r.selectors.some((s) => re.test(s)));
+const hasSelector = (re: RegExp) => rules.some((r) => r.selectors.some((s: string) => re.test(s)));
 
 const root = rules.find((r) => r.selectors.includes(':root'))?.body ?? '';
 const vars = Object.fromEntries([...root.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
@@ -116,7 +116,7 @@ describe('theme.css layout', () => {
   });
 
   it('declares no width above 360px', () => {
-    for (const m of css.matchAll(/(?<![-\w])(?:min-)?width\s*:\s*([\d.]+)(px|rem)/g)) {
+    for (const m of rules.map((r) => r.body).join(';').matchAll(/(?<![-\w])(?:min-)?width\s*:\s*([\d.]+)(px|rem)/g)) {
       const px = Number(m[1]) * (m[2] === 'rem' ? 16 : 1);
       expect(px, m[0]).toBeLessThanOrEqual(360);
     }
