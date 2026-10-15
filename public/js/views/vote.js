@@ -12,6 +12,8 @@ const METHOD_NOTE = {
   admin: 'set by admin',
 };
 
+const BADGE = { open: 'Open', closed: 'Closed', decided: 'Decided', skipped: 'Skipped' };
+
 const clockFmt = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'Asia/Dhaka',
   hour: '2-digit',
@@ -51,9 +53,9 @@ async function vote(snackId) {
 }
 
 function snackList(state) {
-  const ul = node('ul');
+  const ul = node('ul', undefined, 'list');
   for (const s of state.snacks ?? []) {
-    const li = node('li');
+    const li = node('li', undefined, 'row');
     li.append(node('span', s.name, 'name'), ' ', node('span', `${s.count} ${s.count === 1 ? 'vote' : 'votes'}`, 'count'));
     if (s.id === state.leader) li.append(' ', node('strong', 'Leader', 'leader'));
     const mine = s.id === state.my_vote;
@@ -76,13 +78,16 @@ function decidedNodes(state) {
   const note = METHOD_NOTE[method];
   const p = node('p', `Winner: ${winner.name}`, 'winner');
   if (note) p.append(' ', node('span', `(${note})`, 'method'));
-  return [p];
+  const card = node('div', undefined, 'card');
+  card.append(p);
+  return [card];
 }
 
 function render(state) {
   current = state;
   const out = [];
   const status = state?.status;
+  if (BADGE[status]) out.push(node('span', BADGE[status], `badge badge-${status}`));
   if (status === 'skipped') {
     out.push(node('p', 'No snacks today'));
   } else if (status === 'decided') {
@@ -98,7 +103,7 @@ function render(state) {
     out.push(node('p', 'Waiting for today’s state…'));
   }
   if (message) {
-    const err = node('p', message, 'error');
+    const err = node('p', message, 'alert error');
     err.setAttribute('role', 'alert');
     out.push(err);
   }
