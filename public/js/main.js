@@ -22,7 +22,7 @@ function show(state, employees) {
   let employee = employees.find((e) => String(e.id) === getEmployee()) ?? null;
   if (!employee && getEmployee()) clearEmployee(); // deactivated since last visit
   status.replaceChildren();
-  status.className = '';
+  status.className = 'card';
   // vote/suggest need an identity; picker and history do not.
   const active = ([, id]) => employee || id === 'picker' || id === 'history';
   if (mountedFor !== undefined && mountedFor === (employee?.id ?? null)) {
@@ -50,14 +50,18 @@ function showError(err) {
   msg.textContent = err.message || 'Something went wrong.';
   const retry = document.createElement('button');
   retry.type = 'button';
+  retry.className = 'btn-quiet';
   retry.textContent = 'Retry';
   retry.onclick = load;
-  status.className = 'error';
+  status.className = 'card alert error';
   status.replaceChildren(msg, retry);
 }
 
 async function load() {
-  if (mountedFor === undefined) status.textContent = 'Loading…';
+  if (mountedFor === undefined) {
+    status.className = 'card muted';
+    status.textContent = 'Loading…';
+  }
   try {
     await sync();
   } catch (err) {
