@@ -1,0 +1,197 @@
+/* Snack Voting theme: warm and playful. System fonts only, no third-party requests. */
+:root {
+  /* palette */
+  --bg: #fff7ec;
+  --surface: #ffffff;
+  --ink: #3b2a20;
+  --muted: #6b5546;
+  --border: #8f7a6a;
+  --accent: #c2371f;
+  --accent-dark: #9e2a16;
+  --accent-ink: #ffffff;
+  --alert-bg: #fde6e1;
+  --alert-ink: #7f1d0e;
+  --disabled-bg: #eadfd0;
+  --winner-bg: #ffecb3;
+
+  /* state colours: text on background, one pair per badge */
+  --open-bg: #d9f2dd;      --open-ink: #1b5429;
+  --closed-bg: #ebe5dc;    --closed-ink: #463b32;
+  --decided-bg: #ffe0a0;   --decided-ink: #5e3a00;
+  --skipped-bg: #e2e8f1;   --skipped-ink: #33425a;
+  --pending-bg: #fff0b8;   --pending-ink: #5c4400;
+  --approved-bg: #cfeedb;  --approved-ink: #124a28;
+  --retired-bg: #ece6e0;   --retired-ink: #54473e;
+  --tie-bg: #ffdccf;       --tie-ink: #7d2410;
+  --admin-bg: #e5dbf6;     --admin-ink: #46277f;
+  --novotes-bg: #ececec;   --novotes-ink: #474747;
+
+  /* type scale */
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", system-ui, sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.625rem;
+  --text-2xl: 2.125rem;
+
+  /* spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --radius: 1rem;
+  --radius-pill: 999px;
+  --shadow: 0 2px 0 #0000000f, 0 6px 16px #6b3a1a1f;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none; }
+section:empty, #status:empty { display: none; }
+
+body {
+  margin: 0;
+  font: var(--text-base) / 1.45 var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+main {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-4);
+}
+@media (min-width: 40rem) {
+  main { padding: var(--space-6) var(--space-4); }
+}
+
+h1, h2, h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--ink);
+}
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+
+p { margin: 0 0 var(--space-2); }
+label { display: block; margin-bottom: var(--space-1); font-weight: 600; }
+ul { margin: 0; padding-left: var(--space-5); }
+
+/* controls */
+button {
+  font: inherit;
+  font-weight: 700;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+  transition: transform 0.1s, background 0.1s;
+}
+button:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
+button:active:not(:disabled) { transform: scale(0.97); }
+button:disabled {
+  background: var(--disabled-bg);
+  border-color: var(--disabled-bg);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.btn-quiet {
+  background: transparent;
+  border-color: var(--accent-dark);
+  color: var(--accent-dark);
+}
+.btn-quiet:hover:not(:disabled) { background: var(--alert-bg); border-color: var(--accent-dark); }
+
+input, select, textarea {
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  max-width: 100%;
+}
+input:not([type="checkbox"]), select, textarea { width: 100%; min-height: 44px; }
+input[type="checkbox"] { width: 1.5rem; height: 1.5rem; accent-color: var(--accent); vertical-align: middle; }
+textarea { min-height: 6rem; resize: vertical; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--accent-dark);
+  outline-offset: 2px;
+}
+
+/* layout helpers */
+.stack { display: grid; gap: var(--space-3); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.list { list-style: none; margin: 0; padding: 0; }
+.muted { color: var(--muted); font-size: var(--text-sm); }
+
+/* surfaces */
+.card, section, #status {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  box-shadow: var(--shadow);
+}
+.alert, [role="alert"], [role="status"].alert {
+  background: var(--alert-bg);
+  color: var(--alert-ink);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+}
+.error { color: var(--alert-ink); }
+#status.error { border-left: 6px solid var(--accent); }
+
+/* names grid (picker) */
+.names {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* vote hooks */
+.winner {
+  background: var(--winner-bg);
+  color: var(--ink);
+  border: 2px solid var(--decided-ink);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+}
+.leader { font-weight: 700; }
+.mine { font-weight: 700; }
+.count { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* badges: text always accompanies colour */
+.badge {
+  display: inline-block;
+  padding: 0.125rem var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.badge-open { background: var(--open-bg); color: var(--open-ink); }
+.badge-closed { background: var(--closed-bg); color: var(--closed-ink); }
+.badge-decided { background: var(--decided-bg); color: var(--decided-ink); }
+.badge-skipped { background: var(--skipped-bg); color: var(--skipped-ink); }
+.badge-pending { background: var(--pending-bg); color: var(--pending-ink); }
+.badge-approved { background: var(--approved-bg); color: var(--approved-ink); }
+.badge-retired { background: var(--retired-bg); color: var(--retired-ink); }
+.badge-tie { background: var(--tie-bg); color: var(--tie-ink); }
+.badge-admin { background: var(--admin-bg); color: var(--admin-ink); }
+.badge-novotes { background: var(--novotes-bg); color: var(--novotes-ink); }
