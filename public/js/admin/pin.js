@@ -10,8 +10,8 @@ import { clearPin, setPin } from '../identity.js';
 
 export function mount(el, ctx) {
   el.innerHTML =
-    '<form><label>Admin PIN <input type="password" autocomplete="off" required></label> ' +
-    '<button>Enter</button></form><p role="alert"></p>';
+    '<form class="row"><label>Admin PIN <input type="password" autocomplete="off" required></label> ' +
+    '<button>Enter</button></form><p role="alert" class="alert"></p>';
   const input = el.querySelector('input');
   const alert = el.querySelector('[role="alert"]');
   el.querySelector('form').addEventListener('submit', async (e) => {
