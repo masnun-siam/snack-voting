@@ -2,8 +2,9 @@
 // mount(el, ctx) renders into el; update(state) re-renders with new state.
 import { clearEmployee, setEmployee } from '../identity.js';
 
-const btn = (label, onClick) => {
+const btn = (label, onClick, cls) => {
   const b = document.createElement('button');
+  if (cls) b.className = cls;
   b.type = 'button';
   b.textContent = label;
   b.onclick = onClick;
@@ -15,9 +16,10 @@ export function mount(el, { employee, employees, refresh }) {
   const p = document.createElement('p');
   if (employee) {
     p.textContent = `Voting as ${employee.name} `;
-    p.append(btn('Not you?', () => { clearEmployee(); refresh(); }));
+    p.append(btn('Not you?', () => { clearEmployee(); refresh(); }, 'btn-quiet'));
     el.append(p);
   } else if (!employees.length) {
+    p.className = 'muted';
     p.textContent = 'No employees yet. Ask an admin to add some.';
     el.append(p);
   } else {
