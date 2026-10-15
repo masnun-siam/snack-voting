@@ -12,9 +12,9 @@ const el_ = (tag, text) => Object.assign(document.createElement(tag), text === u
 export function mount(el, ctx) {
   const { api } = ctx;
   el.innerHTML =
-    '<h3>Suggestions</h3><ul class="suggestions"></ul><h3>All snacks</h3><ul class="snacks"></ul>' +
-    '<form><label>New snack <input maxlength="60" required></label> <button>Add</button></form>' +
-    '<p role="alert"></p>';
+    '<div class="stack"><h3>Suggestions</h3><ul class="suggestions list stack"></ul><h3>All snacks</h3><ul class="snacks list stack"></ul>' +
+    '<form class="row"><label>New snack <input maxlength="60" required></label> <button>Add</button></form>' +
+    '<p role="alert" class="alert"></p></div>';
   const [sugList, snackList] = el.querySelectorAll('ul');
   const form = el.querySelector('form');
   const input = form.querySelector('input');
@@ -34,15 +34,21 @@ export function mount(el, ctx) {
   }
   const patch = (id, body) => run(() => api.adminPatch(`/admin/snacks/${id}`, body));
 
-  const button = (label, onClick) => {
+  const button = (label, onClick, cls) => {
     const b = el_('button', label);
+    if (cls) b.className = cls;
     b.type = 'button';
     b.addEventListener('click', onClick);
     return b;
   };
   const item = (s, ...buttons) => {
-    const li = el_('li', `${s.name} (${s.status})` + (s.suggested_by_name ? ` - suggested by ${s.suggested_by_name}` : ''));
-    li.append(' ', ...buttons);
+    const li = el_('li');
+    li.className = 'row';
+    const badge = el_('span', s.status);
+    badge.className = `badge badge-${s.status}`;
+    li.append(s.name, ' (', badge, ')');
+    if (s.suggested_by_name) li.append(Object.assign(el_('span', `- suggested by ${s.suggested_by_name}`), { className: 'muted' }));
+    li.append(...buttons);
     return li;
   };
 
@@ -50,7 +56,7 @@ export function mount(el, ctx) {
     const [suggestions, snacks] = await Promise.all([api.adminGet('/admin/suggestions'), api.adminGet('/admin/snacks')]);
     sugList.replaceChildren(
       ...suggestions.map((s) =>
-        item(s, button('Approve', () => patch(s.id, { status: 'approved' })), button('Reject', () => patch(s.id, { status: 'retired' }))),
+        item(s, button('Approve', () => patch(s.id, { status: 'approved' })), button('Reject', () => patch(s.id, { status: 'retired' }), 'btn-quiet')),
       ),
     );
     snackList.replaceChildren(
@@ -60,8 +66,8 @@ export function mount(el, ctx) {
           button('Rename', () => {
             const name = window.prompt('New name', s.name);
             if (name !== null && name.trim() !== '') patch(s.id, { name });
-          }),
-          ...(s.status === 'retired' ? [] : [button('Retire', () => patch(s.id, { status: 'retired' }))]),
+          }, 'btn-quiet'),
+          ...(s.status === 'retired' ? [] : [button('Retire', () => patch(s.id, { status: 'retired' }), 'btn-quiet')]),
         ),
       ),
     );
