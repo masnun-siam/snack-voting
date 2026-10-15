@@ -10,17 +10,32 @@ const METHODS = {
   skipped: 'Skipped',
 };
 
+const BADGE = {
+  votes: 'badge-decided',
+  tie_random: 'badge-tie',
+  admin: 'badge-admin',
+  no_votes: 'badge-novotes',
+  skipped: 'badge-skipped',
+};
+
 let el;
 let api;
 let status;
 let seq = 0; // drops responses from a superseded load/mount
 
-const p = (text) => Object.assign(document.createElement('p'), { textContent: text });
+const p = (text, className) => Object.assign(document.createElement('p'), { textContent: text, className });
 
 const row = ({ day, winner, counts, method }) => {
   const li = document.createElement('li');
+  li.className = 'card';
+  const badge = Object.assign(document.createElement('span'), {
+    className: `badge ${BADGE[method] ?? ''}`.trim(),
+    textContent: METHODS[method] ?? method,
+  });
   const tallies = Object.entries(counts ?? {}).map(([name, n]) => `${name}: ${n}`).join(', ');
-  li.textContent = [day, winner ?? 'No winner', METHODS[method] ?? method, tallies].filter(Boolean).join(' · ');
+  // ' · ' text nodes keep li.textContent reading "day · winner · label · tallies".
+  const parts = [day, winner ?? 'No winner', badge, tallies].filter(Boolean);
+  li.append(...parts.flatMap((part, i) => (i ? [' · ', part] : [part])));
   return li;
 };
 
@@ -34,17 +49,19 @@ async function load() {
     if (days.length) {
       out = [Object.assign(document.createElement('h2'), { textContent: 'History' })];
       const ul = document.createElement('ul');
+      ul.className = 'list stack';
       ul.append(...days.map(row));
       out.push(ul);
     } else {
-      out = [p('No decided days yet.')];
+      out = [p('No decided days yet.', 'muted')];
     }
   } catch (err) {
     const retry = document.createElement('button');
     retry.type = 'button';
+    retry.className = 'btn-quiet';
     retry.textContent = 'Retry';
     retry.onclick = load;
-    out = [p(err.message || 'Could not load history.'), retry];
+    out = [p(err.message || 'Could not load history.', 'alert'), retry];
   }
   if (mine === seq) target.replaceChildren(...out);
 }
