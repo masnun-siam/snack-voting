@@ -62,6 +62,13 @@ Every evening the office provides snacks chosen by whoever buys them. Some items
   - Acceptance: changing the cutoff takes effect for the current day if it is still open; the cutoff must be later than the opening time.
 - **FR-12 History.** Everyone can see the last 30 days of results: date, winner, vote counts per snack, and how it was decided (votes, random tie pick, admin override, no votes, skipped).
   - Acceptance: history lists decided days only and shows no voter names.
+- **FR-13 Repo docs.** The repo carries the docs a maintainer expects: `README.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `LICENSE` (MIT, "2026 Masnun Siam"), `docs/architecture.md`, `docs/quickstart.md` and `docs/deploy.md`. Each describes what exists today and marks anything not built yet as "Planned".
+  - Acceptance: every file exists; the quickstart takes a fresh clone to a running local site and a passing `npm test` using only commands that work; the deploy guide covers creating the Pages project and D1 database, replacing the placeholder database id, setting the `ADMIN_PIN` secret, the two repo secrets for deployment, and the token's minimum scopes (Pages edit, D1 edit); no doc contains a secret value.
+- **FR-14 Deploy workflow.** A GitHub Actions workflow deploys to Cloudflare Pages on every push to `main`, after the tests pass: it applies D1 migrations to the production database, then deploys the `public` site with its functions through Wrangler. Pull requests run the tests only, with no preview deploy.
+  - Acceptance: a push to `main` with passing tests updates the live site; failing tests or a failing migration stop the run before any deploy; a pull request never deploys; the workflow file contains no credential values.
+
+- **FR-15 Visual design.** Every screen (name picker, vote list, suggestion form, history, admin) has a deliberate, polished look instead of default browser styling: a warm and playful direction (cream background, a warm tomato or amber accent, rounded cards, a friendly display font), a consistent type scale, colour palette and spacing, clear states for open, closed, decided and skipped, and it stays mobile-first.
+  - Acceptance: the same design system styles the voter and admin pages; text contrast meets WCAG AA; no screen shows unstyled default controls; the layout works from 360px wide up.
 
 ```mermaid
 stateDiagram-v2
@@ -113,6 +120,13 @@ Cloudflare Pages Functions only; no cron and no Worker outside Pages. The day is
 ### Frontend
 A static, mobile-first single page served by Pages: name picker, snack list with counts and a vote button, suggestion form, history list, and an admin page behind the PIN prompt. States: loading, error with retry, closed, open, decided, skipped, no snacks. Counts refresh by polling every 15 seconds while open; no websockets.
 
+### Deployment
+- One GitHub Actions workflow with two jobs, test then deploy; deploy runs only on pushes to `main` and needs the test job — serves FR-14.
+- Credentials are repo secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; the Pages project is named `snack-voting`. `ADMIN_PIN` is a Pages secret set once by hand and never appears in the workflow.
+- Deploy order: apply pending D1 migrations to the remote database, then publish the Pages project. A failed migration stops the deploy.
+- The real D1 `database_id` is committed to `wrangler.toml` after the database is created (ids are not secret); the deploy guide says where to replace the placeholder.
+- Docs (FR-13) describe only what is built and label the rest "Planned".
+
 ### Integrations and realtime
 Not affected. No notifications, no external services.
 
@@ -126,6 +140,7 @@ Not affected. No notifications, no external services.
 - API tests against a local D1 for FR-2 (window), FR-3 (one vote, change, rejected targets), FR-5 (winner, tie, no votes, frozen result, concurrent decide), FR-6, FR-9, FR-10, FR-11.
 - Component or end-to-end tests for FR-1, FR-4, FR-7, FR-8, FR-12 screens including empty and error states.
 - Manual check of a real-time cutoff on the deployed site.
+- FR-13 and FR-14 are checked by review: docs against the commands they cite, and one real push to `main` for the workflow.
 
 ## Rollout and cost
 
@@ -138,8 +153,18 @@ At least 70% of employees vote on a typical working day within 2 weeks of launch
 ## Epics
 
 - **E1 Snack Voting site** — covers FR-1 to FR-12. Issue: #1
+- **E2 Repo docs and deploy** — covers FR-13 to FR-14. Issue: #58
+- **E3 UI redesign** — covers FR-15. Issue: #73
 
 ## Decisions
+
+- UI polish is requirement FR-15 in a new epic E3, built with the frontend-design skill — the requester called the current UI the ugliest they have seen, and a decision not in the PRD has not been made.
+- Repo docs and the deploy workflow are requirements FR-13 and FR-14 in a new epic E2, not side items — keeps the PRD the source of truth (raised by /create-prd on Tasks.md).
+- Docs set is README, CLAUDE.md, CONTRIBUTING.md, MIT LICENSE (2026 Masnun Siam), docs/architecture.md, docs/quickstart.md, docs/deploy.md; they document what exists and mark planned parts "Planned" — a maintainer-ready repo without promising unbuilt features.
+- Deploy on push to `main` only, after tests pass; no PR preview deploys — smallest workflow for a tens-of-users internal tool.
+- The workflow applies D1 migrations before deploying — schema stays in step with code and a bad migration blocks the release.
+- Credentials are repo secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, Pages project `snack-voting` — standard Wrangler setup; the PIN stays out of CI.
+- The real D1 database id is committed to `wrangler.toml` once created — D1 ids are identifiers, not secrets, and this avoids injecting it at deploy time.
 
 - Voters pick their name from a list, no password — simplest for a small trusted office; impersonation accepted.
 - Admin area uses one shared PIN stored as a secret — minimal protection without accounts.
@@ -153,6 +178,7 @@ At least 70% of employees vote on a typical working day within 2 weeks of launch
 - Employees and snacks are deactivated or retired, never deleted — keeps history intact.
 - Priority medium, success measured by 70% participation — internal nice-to-have.
 - The admin places the order outside the app — ordering is not in scope.
+- FR-15 aesthetic direction is warm and playful: cream background, warm accent (tomato or amber), rounded cards, friendly display font — chosen by the requester on 2026-10-15; an inviting look suits an office snack vote on a phone (raised by /create-tasks).
 - Rejecting a suggestion sets its status to retired — the snack status set has no other terminal value and snacks are never deleted (raised by /create-tasks).
 - The admin screens read full lists through `GET /admin/snacks`, `GET /admin/employees` and `GET /admin/settings`, since the voter endpoints show only active or approved data — the admin UI cannot manage what it cannot list (raised by /create-tasks).
 
@@ -164,7 +190,14 @@ None
 
 - 2026-10-15 — reject = retire; added admin read endpoints GET /admin/snacks, /admin/employees, /admin/settings; issues affected: none (no task issues yet)
 
+- 2026-10-15 — added FR-13 repo docs and FR-14 deploy workflow as epic E2, with a Deployment design section; issues affected: none (E1 issues unchanged; E2 needs an epic and tasks)
+
+- 2026-10-15 — added FR-15 visual design as epic E3 (requester finds the current UI very ugly); issues affected: none (E1 and E2 issues unchanged; E3 needs an epic and tasks)
+- 2026-10-15 — FR-15 aesthetic direction decided (warm and playful); open question resolved; issues affected: none (E3 has no issues yet)
+
 ## Related
 
 - [[05-Work/Office Snacks/Snack Voting/Dump|Dump]] — problem statement
+- [[05-Work/Office Snacks/Snack Voting/Tasks|Tasks]]
+- [[05-Work/Office Snacks/Snack Voting/Decisions|Decisions]]
 - [[05-Work/Office Snacks/Index|Office Snacks Project Index]]

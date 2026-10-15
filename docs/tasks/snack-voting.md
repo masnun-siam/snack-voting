@@ -1,17 +1,21 @@
 # Snack Voting — task list
 
 - Source PRD: `docs/prds/snack-voting.md` (status `Approved`; every decision lives there, none here)
-- Epic: #1
+- Epic: #1 (E1 Snack Voting site, FR-1 to FR-12)
+- Epic: #58 (E2 Repo docs and deploy, FR-13 to FR-14)
+- Epic: #73 (E3 UI redesign, FR-15)
 - Date: 2026-10-15
+- Updated: 2026-10-15 (E2 tasks 29-34 recorded from their closed issues; E3 tasks 35-43 added; FR-15 direction decided in the PRD)
 - Repo: masnun-siam/snack-voting
 
-Greenfield repo (no `CLAUDE.md`, no code): every file below is `(new)` unless stated. Layout: `functions/` (Pages Functions, `backend`), `migrations/` (`backend`), `public/` (static site, `frontend`), `test/backend` and `test/frontend`. Tooling choices (TypeScript, Vitest with the workers pool, plain JS modules for the browser, no framework) follow the PRD's "static single page + Pages Functions + D1" and add no design.
+E1 tasks (1-28) were written against a greenfield repo: every file in them is `(new)` unless stated. E3 (35-43) restyles files E1 builds, so epic E3 starts only after E1 and E2 are merged; it never has a `Depends on` across epics. Layout: `functions/` (Pages Functions, `backend`), `migrations/` (`backend`), `public/` (static site, `frontend`), `test/backend` and `test/frontend`. Tooling choices (TypeScript, Vitest with the workers pool, plain JS modules for the browser, no framework) follow the PRD's "static single page + Pages Functions + D1" and add no design.
 
 ## Shared files
 
 - `functions/_lib/*.ts` — each created by one task (3: `time.ts`, 4: `env.ts`/`http.ts`, 5: `auth.ts`, 7: `day.ts`, 9: `counts.ts`/`decide.ts`) and only imported afterwards; no later task edits them.
 - `public/js/views/{vote,suggest,history}.js` — stubs owned by task 19, then replaced by exactly one of tasks 21, 22, 23; `public/js/admin/{menu,employees,controls}.js` — stubs owned by task 24, replaced by tasks 26, 27, 28. The dependency on the stub task orders them.
 - `public/js/api.js`, `public/js/identity.js` — owned by task 18; read-only for the rest.
+- E3: `public/css/theme.css` is created by task 35 and only linked afterwards. `public/index.html` is edited by task 36 only, `public/admin.html` by task 37 only. Each view or admin module is restyled by exactly one task (38-43); no two E3 tasks edit the same file.
 
 
 ## Waves
@@ -21,6 +25,9 @@ Greenfield repo (no `CLAUDE.md`, no code): every file below is `(new)` unless st
 - Wave 3 (after wave 2 is merged): backend task 5, backend task 6, backend task 7, backend task 11, backend task 12, backend task 13, backend task 14, backend task 15, backend task 16, frontend task 20, frontend task 25
 - Wave 4 (after wave 3 is merged): backend task 8, backend task 9, backend task 17, frontend task 21, frontend task 22, frontend task 23, frontend task 26, frontend task 27, frontend task 28
 - Wave 5 (after wave 4 is merged): backend task 10
+- E2 (tasks 29-34) is already merged; issues #59-#64 are closed.
+- Wave 6 (E3, after E1 and E2 are merged): frontend task 35
+- Wave 7 (after wave 6 is merged): frontend tasks 36, 37, 38, 39, 40, 41, 42, 43 (eight in parallel, no shared files)
 
 ## Task 1 — Project scaffold
 Outcome: A Cloudflare Pages + D1 TypeScript project that installs and runs an (empty) test suite.
@@ -33,6 +40,7 @@ Acceptance criteria:
 Verify command: `npm test`
 Depends on: none
 Parallel: yes
+Epic: #1
 Issue: #2
 
 ## Task 2 — Schema and migration
@@ -46,6 +54,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/schema.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #3
 
 ## Task 3 — Time and window logic
@@ -59,6 +68,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/time.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #4
 
 ## Task 4 — Env type and HTTP helpers
@@ -72,6 +82,7 @@ Acceptance criteria:
 Verify command: `npx tsc --noEmit && npx vitest run --project backend test/backend/http.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #5
 
 ## Task 5 — Admin PIN middleware
@@ -85,6 +96,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/auth.test.ts`
 Depends on: task 4
 Parallel: yes
+Epic: #1
 Issue: #6
 
 ## Task 6 — Voter employee list
@@ -98,6 +110,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/employees.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #7
 
 ## Task 7 — Day state helper
@@ -111,6 +124,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/day.test.ts`
 Depends on: task 2, task 3
 Parallel: yes
+Epic: #1
 Issue: #8
 
 ## Task 8 — Cast or change a vote
@@ -124,6 +138,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/vote.test.ts`
 Depends on: task 4, task 7
 Parallel: yes
+Epic: #1
 Issue: #9
 
 ## Task 9 — Decide the day
@@ -137,6 +152,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/decide.test.ts`
 Depends on: task 7
 Parallel: yes
+Epic: #1
 Issue: #10
 
 ## Task 10 — Voter state endpoint
@@ -150,6 +166,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/state.test.ts`
 Depends on: task 4, task 7, task 9
 Parallel: yes
+Epic: #1
 Issue: #11
 
 ## Task 11 — Suggest a snack
@@ -163,6 +180,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/suggestions.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #12
 
 ## Task 12 — History endpoint
@@ -176,6 +194,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/history.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #13
 
 ## Task 13 — Admin snack list and add
@@ -189,6 +208,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-snacks-list.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #14
 
 ## Task 14 — Admin snack update
@@ -202,6 +222,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-snack-update.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #15
 
 ## Task 15 — Admin employees API
@@ -215,6 +236,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-employees.test.ts`
 Depends on: task 2, task 4
 Parallel: yes
+Epic: #1
 Issue: #16
 
 ## Task 16 — Admin settings API
@@ -228,6 +250,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-settings.test.ts`
 Depends on: task 2, task 3, task 4
 Parallel: yes
+Epic: #1
 Issue: #17
 
 ## Task 17 — Admin day skip and override
@@ -241,6 +264,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project backend test/backend/admin-days.test.ts`
 Depends on: task 2, task 3, task 4, task 7
 Parallel: yes
+Epic: #1
 Issue: #18
 
 ## Task 18 — Frontend API client and identity
@@ -254,6 +278,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/api.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #19
 
 ## Task 19 — Voter view contract and stubs
@@ -266,6 +291,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/stubs.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #20
 
 ## Task 20 — Page shell and name picker
@@ -279,6 +305,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/shell.test.ts`
 Depends on: task 18, task 19
 Parallel: yes
+Epic: #1
 Issue: #21
 
 ## Task 21 — Vote view
@@ -292,6 +319,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/vote-view.test.ts`
 Depends on: task 20
 Parallel: yes
+Epic: #1
 Issue: #22
 
 ## Task 22 — Suggest view
@@ -305,6 +333,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/suggest-view.test.ts`
 Depends on: task 20
 Parallel: yes
+Epic: #1
 Issue: #23
 
 ## Task 23 — History view
@@ -318,6 +347,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/history-view.test.ts`
 Depends on: task 20
 Parallel: yes
+Epic: #1
 Issue: #24
 
 ## Task 24 — Admin view contract and stubs
@@ -330,6 +360,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-stubs.test.ts`
 Depends on: task 1
 Parallel: yes
+Epic: #1
 Issue: #25
 
 ## Task 25 — Admin shell and PIN prompt
@@ -343,6 +374,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-shell.test.ts`
 Depends on: task 18, task 24
 Parallel: yes
+Epic: #1
 Issue: #26
 
 ## Task 26 — Admin menu view
@@ -356,6 +388,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-menu.test.ts`
 Depends on: task 25
 Parallel: yes
+Epic: #1
 Issue: #27
 
 ## Task 27 — Admin employees view
@@ -369,6 +402,7 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-employees.test.ts`
 Depends on: task 25
 Parallel: yes
+Epic: #1
 Issue: #28
 
 ## Task 28 — Admin settings and day controls view
@@ -382,4 +416,212 @@ Acceptance criteria:
 Verify command: `npx vitest run --project frontend test/frontend/admin-controls.test.ts`
 Depends on: task 25
 Parallel: yes
+Epic: #1
 Issue: #29
+
+## Task 29 — Deploy workflow
+Outcome: A GitHub Actions workflow tests every push and pull request and deploys to Cloudflare Pages only on pushes to `main` after the tests pass.
+Area: backend
+Files/symbols: `.github/workflows/deploy.yml` (new), `test/frontend/workflow.test.ts` (new, not counted).
+Acceptance criteria:
+- A pull request runs the `test` job only; `deploy` needs `test` and runs only on a push to `main` (FR-14).
+- Migrations are applied before the Pages deploy in the same job, so a failing migration stops the run before any deploy (FR-14).
+- The file refers to credentials only as `${{ secrets.* }}`; no credential value appears and `ADMIN_PIN` is not mentioned (FR-14).
+Verify command: `npx vitest run --project frontend test/frontend/workflow.test.ts`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #59 (closed)
+
+## Task 30 — LICENSE and CONTRIBUTING
+Outcome: The repo has an MIT `LICENSE` (2026 Masnun Siam) and a `CONTRIBUTING.md`.
+Area: backend
+Files/symbols: `LICENSE` (new), `CONTRIBUTING.md` (new).
+Acceptance criteria:
+- `LICENSE` is the standard MIT text with "2026 Masnun Siam" (FR-13).
+- `CONTRIBUTING.md` cites only commands that exist in `package.json` and marks anything not built "Planned" (FR-13).
+- Neither file contains a secret value (FR-13).
+Verify command: `grep -q "2026 Masnun Siam" LICENSE && grep -q "npm test" CONTRIBUTING.md`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #60 (closed)
+
+## Task 31 — Quickstart
+Outcome: `docs/quickstart.md` takes a fresh clone to a running local site and a passing `npm test`.
+Area: backend
+Files/symbols: `docs/quickstart.md` (new).
+Acceptance criteria:
+- Every command exists in `package.json` or works as a Wrangler command; steps not yet possible are labelled "Planned" (FR-13).
+- Following it from a fresh clone ends with `npm test` passing (FR-13).
+- No secret or PIN value appears (FR-13).
+Verify command: `grep -q "npm test" docs/quickstart.md && npm ci && npm test`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #61 (closed)
+
+## Task 32 — Deploy guide
+Outcome: `docs/deploy.md` sets up Cloudflare and the repo secrets from one page and explains the deploy workflow.
+Area: backend
+Files/symbols: `docs/deploy.md` (new).
+Acceptance criteria:
+- Covers the Pages project, the D1 database, replacing the placeholder id, `ADMIN_PIN`, the two repo secrets and the token's minimum scopes (Pages edit, D1 edit) (FR-13).
+- Describes the workflow as built: tests, migrations, then deploy on push to `main`, no PR previews (FR-14).
+- Contains no secret value (FR-13).
+Verify command: `grep -q "CLOUDFLARE_API_TOKEN" docs/deploy.md && grep -q "ADMIN_PIN" docs/deploy.md`
+Depends on: task 29
+Parallel: no
+Epic: #58
+Issue: #63 (closed)
+
+## Task 33 — Architecture doc and CLAUDE.md
+Outcome: `docs/architecture.md` and `CLAUDE.md` record the design and repo conventions.
+Area: backend
+Files/symbols: `docs/architecture.md` (new), `CLAUDE.md` (new).
+Acceptance criteria:
+- `docs/architecture.md` matches the PRD's technical design and labels everything not yet built "Planned" (FR-13).
+- `CLAUDE.md` lists only paths and commands that exist today, or marks them "Planned" (FR-13).
+- Neither file contains a secret value (FR-13).
+Verify command: `test -f docs/architecture.md && test -f CLAUDE.md && grep -q "Planned" docs/architecture.md`
+Depends on: none
+Parallel: yes
+Epic: #58
+Issue: #62 (closed)
+
+## Task 34 — README
+Outcome: `README.md` introduces the project, marks each feature built or "Planned" and links every other doc.
+Area: backend
+Files/symbols: `README.md` (new).
+Acceptance criteria:
+- Links the quickstart, deploy guide, architecture doc, CONTRIBUTING and LICENSE, each of which exists (FR-13).
+- Describes only what exists today and marks the rest "Planned" (FR-13).
+- Contains no secret value (FR-13).
+Verify command: `for f in docs/quickstart.md docs/deploy.md docs/architecture.md CONTRIBUTING.md LICENSE; do grep -q "$f" README.md && test -f "$f" || exit 1; done`
+Depends on: task 30, task 31, task 32, task 33
+Parallel: no
+Epic: #58
+Issue: #64 (closed)
+
+## Task 35 — Design system stylesheet
+Outcome: One shared stylesheet defines the warm and playful design tokens and styles every control, card and state badge. Direction (PRD decision): warm and playful — cream background, warm tomato or amber accent, rounded cards, friendly display font; the implementer uses the frontend-design skill within it.
+Area: frontend
+Files/symbols: `public/css/theme.css` (new: colour, type-scale and spacing custom properties; base element styles; classes for button, input, select, textarea, card, badge per state `open`/`closed`/`decided`/`skipped`, alert, focus ring; font either self-hosted or a system rounded stack, with no third-party requests), `test/frontend/theme.test.ts` (new, not counted).
+Acceptance criteria:
+- The file defines the palette, type scale and spacing as custom properties and a class for each state badge: open, closed, decided and skipped (FR-15).
+- Every text and background colour pair the stylesheet uses meets WCAG AA contrast (4.5:1 body, 3:1 large text), checked by the test (FR-15).
+- Native `button`, `input`, `select` and `textarea` are styled by element selectors, so none renders with browser default styling (FR-15).
+- No rule forces horizontal overflow at 360px wide: no fixed widths above 360px, `box-sizing: border-box`, fluid containers (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/theme.test.ts`
+Depends on: none
+Parallel: yes
+Epic: #73
+Issue: #74
+
+## Task 36 — Voter page shell and name picker styling
+Outcome: The voter page and name picker use the design system.
+Area: frontend
+Files/symbols: `public/index.html` (edit: link `css/theme.css`, remove inline styling, theme classes on the shell and sections), `public/js/views/picker.js` (edit: theme classes), `public/js/main.js` (edit: `showError` and loading status classes).
+Acceptance criteria:
+- `index.html` links the stylesheet and holds no `<style>` block or inline colour styles (FR-15).
+- The picker, loading, error-with-retry and no-employees states render only elements that carry theme classes, and the page has a viewport meta for 360px (FR-15).
+- Existing picker behaviour is unchanged: the whole shell test suite still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/shell.test.ts test/frontend/style-shell.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #75
+
+## Task 37 — Admin page shell and PIN prompt styling
+Outcome: The admin page and PIN prompt use the same design system as the voter page.
+Area: frontend
+Files/symbols: `public/admin.html` (edit: link `css/theme.css`, remove the inline `<style>`), `public/js/admin/pin.js` (edit: theme classes), `public/js/admin/main.js` (edit: theme classes on section containers).
+Acceptance criteria:
+- `admin.html` links the same stylesheet as the voter page and holds no `<style>` block (FR-15).
+- The PIN prompt, its error alert and the section containers carry theme classes (FR-15).
+- Existing admin shell behaviour is unchanged: `admin-shell.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/admin-shell.test.ts test/frontend/style-admin-shell.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #76
+
+## Task 38 — Vote view styling
+Outcome: The vote list shows clear open, closed, decided and skipped states in the design system.
+Area: frontend
+Files/symbols: `public/js/views/vote.js` (edit: theme classes and state badges).
+Acceptance criteria:
+- The status area shows the theme badge for open, closed, decided or skipped, and the decided winner is visually distinct (FR-15).
+- Every snack row, count, vote button and the user's current vote use theme classes; no rendered control lacks one (FR-15).
+- Existing vote behaviour and copy are unchanged: `vote-view.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/vote-view.test.ts test/frontend/style-vote.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #77
+
+## Task 39 — Suggest view styling
+Outcome: The suggestion form uses the design system.
+Area: frontend
+Files/symbols: `public/js/views/suggest.js` (edit: theme classes).
+Acceptance criteria:
+- The form field, submit button and its success and error messages carry theme classes (FR-15).
+- Existing suggest behaviour is unchanged: `suggest-view.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/suggest-view.test.ts test/frontend/style-suggest.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #78
+
+## Task 40 — History view styling
+Outcome: The history list uses the design system, with a clear badge for how each day was decided.
+Area: frontend
+Files/symbols: `public/js/views/history.js` (edit: theme classes and per-method badge).
+Acceptance criteria:
+- Each day renders as a theme card with its winner and a badge for votes, random tie pick, admin override, no votes or skipped (FR-15).
+- The empty message and the error with retry use theme classes (FR-15).
+- Existing history behaviour is unchanged: `history-view.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/history-view.test.ts test/frontend/style-history.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #79
+
+## Task 41 — Admin menu styling
+Outcome: The admin menu section uses the design system.
+Area: frontend
+Files/symbols: `public/js/admin/menu.js` (edit: theme classes and status badges).
+Acceptance criteria:
+- Suggestion and snack rows, their buttons, the add form and status badges (pending, approved, retired) carry theme classes (FR-15).
+- Existing menu behaviour is unchanged: `admin-menu.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/admin-menu.test.ts test/frontend/style-admin-menu.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #80
+
+## Task 42 — Admin employees styling
+Outcome: The admin employees section uses the design system.
+Area: frontend
+Files/symbols: `public/js/admin/employees.js` (edit: theme classes).
+Acceptance criteria:
+- The textarea, buttons, employee rows and the active or inactive marker carry theme classes (FR-15).
+- Existing employees behaviour is unchanged: `admin-employees.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/admin-employees.test.ts test/frontend/style-admin-employees.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #81
+
+## Task 43 — Admin controls styling
+Outcome: The admin settings and day controls use the design system.
+Area: frontend
+Files/symbols: `public/js/admin/controls.js` (edit: theme classes).
+Acceptance criteria:
+- The time inputs, weekday toggles, skip and override controls and their error alerts carry theme classes (FR-15).
+- Existing controls behaviour is unchanged: `admin-controls.test.ts` still passes (FR-15).
+Verify command: `npx vitest run --project frontend test/frontend/admin-controls.test.ts test/frontend/style-admin-controls.test.ts`
+Depends on: task 35
+Parallel: yes
+Epic: #73
+Issue: #82
