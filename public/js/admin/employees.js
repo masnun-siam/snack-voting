@@ -10,9 +10,9 @@ export function mount(el, ctx) {
   const { api } = ctx;
   el.innerHTML =
     '<h2>Employees</h2>' +
-    '<form><label>Add employees (one name per line)<br><textarea rows="5" style="width:100%"></textarea></label> ' +
+    '<form class="stack"><label>Add employees (one name per line)<br><textarea rows="5"></textarea></label>' +
     '<button>Add</button></form>' +
-    '<p role="status"></p><p role="alert"></p><ul></ul>';
+    '<p role="status" class="muted"></p><p role="alert" class="alert"></p><ul class="list"></ul>';
   const textarea = el.querySelector('textarea');
   const status = el.querySelector('[role="status"]');
   const alert = el.querySelector('[role="alert"]');
@@ -20,6 +20,7 @@ export function mount(el, ctx) {
 
   const btn = (label, onClick) => {
     const b = document.createElement('button');
+    b.className = 'btn-quiet';
     b.textContent = label;
     b.addEventListener('click', onClick);
     return b;
@@ -48,13 +49,19 @@ export function mount(el, ctx) {
 
   function row(emp) {
     const li = document.createElement('li');
+    li.className = 'row';
     const name = document.createElement('span');
     name.textContent = emp.active ? emp.name : `${emp.name} (inactive)`;
+    const badge = document.createElement('span');
+    badge.className = `badge ${emp.active ? 'badge-approved' : 'badge-retired'}`;
+    badge.textContent = emp.active ? 'active' : 'inactive';
     const input = document.createElement('input');
     input.value = emp.name;
     input.maxLength = 60;
     li.append(
       name,
+      ' ',
+      badge,
       ' ',
       input,
       ' ',
