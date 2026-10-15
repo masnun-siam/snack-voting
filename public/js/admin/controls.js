@@ -24,7 +24,7 @@ const node = (tag, text, className) => {
 };
 
 const alertNode = (msg) => {
-  const p = node('p', msg, 'error');
+  const p = node('p', msg, 'alert error');
   p.setAttribute('role', 'alert');
   return p;
 };
@@ -37,9 +37,9 @@ const field = (label, input) => {
 
 export function mount(el, ctx) {
   const { api } = ctx;
-  const formBox = node('div'); // not a <form>: a click handler works detached from the document
+  const formBox = node('div', undefined, 'row'); // not a <form>: a click handler works detached from the document
   const formMsg = node('div');
-  const dayBox = node('div');
+  const dayBox = node('div', undefined, 'row');
   el.replaceChildren(node('h2', 'Voting window'), formBox, formMsg, node('h2', 'Today'), dayBox);
 
   let dayMsg = '';
@@ -90,8 +90,8 @@ export function mount(el, ctx) {
 
   function renderDay(state) {
     current = state;
-    const out = [];
     const { status, day } = state;
+    const out = [node('span', status[0].toUpperCase() + status.slice(1), `badge badge-${status}`)];
     const cutoff = state.window?.cutoff_time;
     if (status === 'skipped') {
       out.push(node('p', 'Today is skipped: no snacks today'));
@@ -113,7 +113,7 @@ export function mount(el, ctx) {
       out.push(node('p', status === 'open' ? `Voting is open until ${cutoff}` : 'Voting is not open'));
       // Closed after cutoff only happens on an undecided day that is about to be decided: no skip then.
       if (status === 'open' || (cutoff && clockFmt.format(new Date()) < cutoff)) {
-        const btn = node('button', 'Skip day');
+        const btn = node('button', 'Skip day', 'btn-quiet');
         btn.type = 'button';
         btn.onclick = () => act(`/admin/days/${day}/skip`);
         out.push(btn);
